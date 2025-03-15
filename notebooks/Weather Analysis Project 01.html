@@ -1,0 +1,69 @@
+import pandas as pd
+
+df = df = pd.read_csv("D:/Apex Protocol/Data Science & Mathermatics/Pandas using Data Analysis/archive/seattle-weather.csv")
+df.head()
+date	precipitation	temp_max	temp_min	wind	weather
+0	2012-01-01	0.0	12.8	5.0	4.7	drizzle
+1	2012-01-02	10.9	10.6	2.8	4.5	rain
+2	2012-01-03	0.8	11.7	7.2	2.3	rain
+3	2012-01-04	20.3	12.2	5.6	4.7	rain
+4	2012-01-05	1.3	8.9	2.8	6.1	rain
+df.info()
+df.describe()
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 1461 entries, 0 to 1460
+Data columns (total 6 columns):
+ #   Column         Non-Null Count  Dtype  
+---  ------         --------------  -----  
+ 0   date           1461 non-null   object 
+ 1   precipitation  1461 non-null   float64
+ 2   temp_max       1461 non-null   float64
+ 3   temp_min       1461 non-null   float64
+ 4   wind           1461 non-null   float64
+ 5   weather        1461 non-null   object 
+dtypes: float64(4), object(2)
+memory usage: 68.6+ KB
+precipitation	temp_max	temp_min	wind
+count	1461.000000	1461.000000	1461.000000	1461.000000
+mean	3.029432	16.439083	8.234771	3.241136
+std	6.680194	7.349758	5.023004	1.437825
+min	0.000000	-1.600000	-7.100000	0.400000
+25%	0.000000	10.600000	4.400000	2.200000
+50%	0.000000	15.600000	8.300000	3.000000
+75%	2.800000	22.200000	12.200000	4.000000
+max	55.900000	35.600000	18.300000	9.500000
+df['date'] = pd.to_datetime(df['date'])
+df.drop_duplicates(inplace=True)
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.histplot(df['temp_max'], bins=30, kde=True)
+plt.title("Temperature Distribution")
+plt.show()
+
+plt.figure(figsize=(10,5))
+df.groupby('date')['temp_max'].mean().plot()
+plt.title("Temperature Trends Over Time")
+plt.xlabel("Date")
+plt.ylabel("Max Temperature")
+plt.show()
+
+plt.figure(figsize=(10,6))
+sns.heatmap(df.corr(), annot=True, cmap='coolwarm', fmt='.2f')
+plt.title("Feature Correlation Matrix")
+plt.show()
+
+sns.countplot(x='weather', data=df)
+plt.xticks(rotation=45)
+plt.title("Weather Condition Frequency")
+plt.show()
+
+from ipywidgets import interact
+
+def show_rows(n=5):
+    display(df.head(n))
+
+interact(show_rows, n=(1, len(df)))
+<function __main__.show_rows(n=5)>
+df.to_csv('cleaned_seattle_weather.csv', index=False)
+ 
